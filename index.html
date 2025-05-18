@@ -146,7 +146,7 @@
 <body>
 
   <div class="container">
-    <h2>Beijar a minha boca hoje às 19:00? <span class="emoji">💋</span></h2>
+    <h2>Beijar a minha boca hoje às 19:99? <span class="emoji">🫦👄👅</span></h2>
     
     <div class="hearts">
       <span class="heart" style="top: 10%; left: 10%;">❤️</span>
@@ -154,11 +154,15 @@
       <span class="heart" style="top: 50%; left: 20%;">💓</span>
       <span class="heart" style="top: 70%; left: 70%;">❤️</span>
       <span class="heart" style="top: 90%; left: 40%;">💗</span>
+      <span class="heart" style="top: 30%; left: 30%;">😔</span>
+      <span class="heart" style="top: 60%; left: 15%;">🥺</span>
+      <span class="heart" style="top: 75%; left: 60%;">🙏</span>
+      <span class="heart" style="top: 15%; left: 60%;">🙌</span>
     </div>
     
     <div class="buttons">
-      <button class="yes" id="yesBtn">Sim, quero! 😍</button>
-      <button class="no" id="noBtn">Não 😢</button>
+      <button class="yes" id="yesBtn">Sim 😍/</button>
+      <button class="no" id="noBtn">Não 😢😔</button>
     </div>
     
     <div class="webview-warning" id="webviewWarning">
@@ -256,7 +260,7 @@
         // Adiciona mais corações
         for (let i = 0; i < 10; i++) {
           const heart = document.createElement('span');
-          heart.innerHTML = ['❤️', '💕', '💓', '💗'][Math.floor(Math.random() * 4)];
+          heart.innerHTML = ['❤️', '💕', '💓', '💗', '😈', '🥺', '🙌', '🙏', '🫦', '👄', '👅'][Math.floor(Math.random() * 11)];
           heart.className = 'heart';
           heart.style.top = `${Math.random() * 100}%`;
           heart.style.left = `${Math.random() * 100}%`;
