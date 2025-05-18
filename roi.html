@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Beijar a minha boca hoje?</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .container {
+      text-align: center;
+      background-color: rgba(30, 30, 46, 0.85);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 105, 180, 0.3);
+      position: relative;
+      width: 85%;
+      max-width: 340px;
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      font-weight: 600;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      position: relative;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: visible;
+    }
+
+    button {
+      padding: 14px 32px;
+      margin: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .yes {
+      background: linear-gradient(to right, #ff4d8f, #ff69b4);
+      color: white;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 5px 15px rgba(255, 77, 143, 0.4);
+      width: 85%;
+      margin-bottom: 30px;
+    }
+    
+    .yes:hover {
+      box-shadow: 0 8px 20px rgba(255, 77, 143, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .no {
+      background-color: #444;
+      color: white;
+      position: absolute;
+      top: 80px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      width: 50%;
+      z-index: 0;
+    }
+
+    .hearts {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      color: rgba(255, 77, 143, 0.6);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    .webview-warning {
+      background-color: rgba(255, 77, 143, 0.2);
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .open-browser {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: linear-gradient(to right, #0088ff, #2196F3);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+    }
+
+    .emoji {
+      font-size: 1.5rem;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Beijar a minha boca hoje às 19:00? <span class="emoji">💋</span></h2>
+    
+    <div class="hearts">
+      <span class="heart" style="top: 10%; left: 10%;">❤️</span>
+      <span class="heart" style="top: 20%; left: 80%;">💕</span>
+      <span class="heart" style="top: 50%; left: 20%;">💓</span>
+      <span class="heart" style="top: 70%; left: 70%;">❤️</span>
+      <span class="heart" style="top: 90%; left: 40%;">💗</span>
+    </div>
+    
+    <div class="buttons">
+      <button class="yes" id="yesBtn">Sim, quero! 😍</button>
+      <button class="no" id="noBtn">Não 😢</button>
+    </div>
+    
+    <div class="webview-warning" id="webviewWarning">
+      Parece que você está no WhatsApp! Para melhor experiência, abra no navegador.
+    </div>
+    
+    <button class="open-browser" id="openBrowser">
+      Abrir no navegador externo
+    </button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const noBtn = document.getElementById('noBtn');
+      const yesBtn = document.getElementById('yesBtn');
+      const container = document.querySelector('.container');
+      const webviewWarning = document.getElementById('webviewWarning');
+      const openBrowser = document.getElementById('openBrowser');
+      const hearts = document.querySelectorAll('.heart');
+      
+      // Anima os corações
+      hearts.forEach((heart, index) => {
+        heart.style.animationDelay = `${index * 0.8}s`;
+      });
+      
+      // Detecta se está em WebView do WhatsApp
+      function isInWebView() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return userAgent.indexOf('whatsapp') !== -1 || 
+               userAgent.indexOf('fbav') !== -1 ||
+               userAgent.indexOf('instagram') !== -1 ||
+               (userAgent.indexOf('iphone') !== -1 && !userAgent.includes('safari'));
+      }
+      
+      // Se estiver em um WebView, mostra o aviso e o botão para abrir no navegador
+      if (isInWebView()) {
+        webviewWarning.style.display = 'block';
+        openBrowser.style.display = 'block';
+        
+        // Tenta abrir no navegador externo
+        openBrowser.addEventListener('click', function() {
+          const pageUrl = window.location.href;
+          window.open(pageUrl, '_system');
+          
+          // Fallbacks para diferentes plataformas
+          setTimeout(() => {
+            try {
+              if (navigator.share) {
+                navigator.share({url: pageUrl});
+              }
+            } catch (e) {
+              console.error("Erro ao compartilhar:", e);
+            }
+          }, 300);
+        });
+      }
+
+      function moveNoButton(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        
+        const containerRect = container.getBoundingClientRect();
+        const maxX = containerRect.width - noBtn.offsetWidth - 20;
+        const maxY = containerRect.height - noBtn.offsetHeight - 50;
+        
+        // Posição aleatória, com mais probabilidade de ir para os lados
+        const newX = Math.floor(Math.random() * maxX) - maxX/3;
+        // Para baixo e para os lados
+        const newY = Math.floor(Math.random() * 60); 
+        
+        // Aplica transformação CSS
+        noBtn.style.transform = `translate(${newX}px, ${newY}px)`;
+        
+        // Efeito visual ao fugir
+        yesBtn.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          yesBtn.style.transform = '';
+        }, 300);
+        
+        return false;
+      }
+
+      function sayYes(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        
+        // Efeito visual antes de redirecionar
+        yesBtn.style.transform = 'scale(1.1)';
+        container.style.boxShadow = '0 0 40px rgba(255, 105, 180, 0.7)';
+        
+        // Adiciona mais corações
+        for (let i = 0; i < 10; i++) {
+          const heart = document.createElement('span');
+          heart.innerHTML = ['❤️', '💕', '💓', '💗'][Math.floor(Math.random() * 4)];
+          heart.className = 'heart';
+          heart.style.top = `${Math.random() * 100}%`;
+          heart.style.left = `${Math.random() * 100}%`;
+          heart.style.fontSize = `${Math.random() * 20 + 20}px`;
+          document.querySelector('.hearts').appendChild(heart);
+        }
+        
+        // Redireciona após um pequeno delay para o efeito visual
+        setTimeout(() => {
+          // URL destino
+          const targetUrl = "https://www.instagram.com/p/DEnJvn6RF0x/";
+          
+          try {
+            window.location.href = targetUrl;
+          } catch (err) {
+            window.open(targetUrl, '_blank');
+          }
+        }, 700);
+        
+        return false;
+      }
+
+      // Eventos para desktop
+      noBtn.addEventListener('mouseover', moveNoButton);
+      
+      // Eventos para dispositivos móveis
+      noBtn.addEventListener('touchstart', moveNoButton, {passive: false});
+      noBtn.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+      }, {passive: false});
+      
+      // Eventos de clique
+      noBtn.addEventListener('click', moveNoButton);
+      yesBtn.addEventListener('click', sayYes);
+      
+      // Posiciona o botão Não aleatoriamente na inicialização para mostrar que ele se move
+      setTimeout(moveNoButton, 1000);
+      
+      // Prevenção de zoom no iPhone
+      document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+      }, {passive: false});
+    });
+  </script>
+
+</body>
+</html>
